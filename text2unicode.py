@@ -32,6 +32,7 @@ def normalization(word):                    #Word Normalization
 	word = word.replace('अौ', 'औ')
 	word = word.replace('एे', 'ऐ')
 	word = word.replace('ि्र', '्रि')
+	word = word.replace('ि्भ', '्भि')
 	word = word.replace('।ं','ं।')
 		
 	#print("Converting---")
@@ -86,11 +87,19 @@ for k in lines:
 				rule1 ="ि"
 				temp=True
 			elif(temp==True and c in full_char):
+				#print(word)
 				word = word+c+rule1
+				#print(word, c, rule1)
 				temp=False
 			elif(temp==True and en[char[i-1]]=='श्' and c=='ा'):
 				word = word[:-2]                    
 				word = word+'श'+rule1
+				temp=False
+			#rule updated by Nagaraju for 
+			#input = input : vfHkdkjd;output : अभकिारक;expected output : अभिकारक
+			elif(temp==True and en[char[i-1]]=='भ्' and c=='ा'):
+				word = word[:-2]                    
+				word = word + 'भ' + rule1
 				temp=False
 			elif(word[-1:] =='ं' and c in matra):
 				word = word[:-1]
