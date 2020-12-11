@@ -91,13 +91,15 @@ for k in lines:
 				word = word+c+rule1
 				#print(word, c, rule1)
 				temp=False
-			elif(temp==True and en[char[i-1]]=='श्' and c=='ा'):
+			elif(temp==True and char[i-1]=='\'' and c=='ा'):
+			#elif(temp==True and en[char[i-1]]=='श्' and c=='ा'):
 				word = word[:-2]                    
 				word = word+'श'+rule1
 				temp=False
 			#rule updated by Nagaraju for 
 			#input = input : vfHkdkjd;output : अभकिारक;expected output : अभिकारक
-			elif(temp==True and en[char[i-1]]=='भ्' and c=='ा'):
+			#elif(temp==True and en[char[i-1]]=='भ्' and c=='ा'):
+			elif(temp==True and char[i-1]=='H' and c=='ा'):
 				word = word[:-2]                    
 				word = word + 'भ' + rule1
 				temp=False
