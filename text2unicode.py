@@ -127,4 +127,6 @@ for k in lines:
 				word = word+c
 			#print(word)
 	word =normalization(word)
+	word = re.sub(r'पx0', 'फ', word)
+	word = re.sub(r'([\u0915-\u0939])ोx6', r'\1ों', word)
 	output.write(word+"\n")
