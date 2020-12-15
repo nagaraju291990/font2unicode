@@ -43,24 +43,25 @@ k = sys.argv    #for command line arguments
 f = open(inputfile,"r")     #Opening input file
 lines = []
 c=0
+
 for line in f:
 	if(len(line)>1):
 		lines.append(line.rstrip())
 
-en = {}
+map_dict = {}
 
 #map_dic = choose_font()
 
-abcd = open(map_file,"r")
-for i in abcd:
+mappings = open(map_file,"r")
+for m in mappings:
 	#print(i)
-	map_list = i.strip().split()
+	map_line = m.strip().split()
 	#print(map_list)
-	if(len(map_list)==2):
-		en[map_list[0]]=map_list[1]
+	if(len(map_line)==2):
+		map_dict[map_line[0]]=map_line[1]
 
-en[" "]=" "
-en[" "]="इ"
+map_dict[" "]=" "
+map_dict[" "]="इ"
 #print(en)
 output = open("output.txt","w")
 
@@ -70,63 +71,53 @@ matra = ['ु','ू','ि','ी','े','ै','ो','ौ','ँ']
 numbers=['1','2','3','4','5','6','7','8','9','0',':','−','/']
 special_char=["आ","ो"]
 
+#read input file line by line
 for k in lines:
 	#print(k)
 	#lang = find_lang(k)
 	k = re.sub(r'osQ', 'ds', k)
 	k = re.sub(r'oSQ', 'dS', k)
-	char = list(k)
-	word = ""
-	temp, flag =-1, False
-	for i in range(0,len(char)):
-		#print(len(word))
-		if(char[i] in en):
-			c =en[char[i]]
-			#print(char[i]+" "+c)
-			if(c=="ि"):
-				rule1 ="ि"
-				temp=True
-			elif(temp==True and c in full_char):
-				#print(word)
-				word = word+c+rule1
-				#print(word, c, rule1)
-				temp=False
-			elif(temp==True and char[i-1]=='\'' and c=='ा'):
-			#elif(temp==True and en[char[i-1]]=='श्' and c=='ा'):
-				word = word[:-2]                    
-				word = word+'श'+rule1
-				temp=False
-			#rule updated by Nagaraju for 
-			#input = input : vfHkdkjd;output : अभकिारक;expected output : अभिकारक
-			#elif(temp==True and en[char[i-1]]=='भ्' and c=='ा'):
-			elif(temp==True and char[i-1]=='H' and c=='ा'):
-				word = word[:-2]                    
-				word = word + 'भ' + rule1
-				temp=False
-			elif(word[-1:] =='ं' and c in matra):
-				word = word[:-1]
-				word = word+c+'ं'
-			elif(c=='र्' and len(word)>=1 and word[-1]!="इ"):
-				count =-1
-				for i in range(len(word)):
-					if(word[count] in full_char):
-						word = word[:count]+c+word[count:]
-						break
-					count=count-1  
-			elif(c=="ा" and len(word)>=1 and word[-1] in half_char):
-				word=word[:-1]
-			elif(c=="े" and len(word)>=1 and word[-1]=="ं"):
-				word = word[:-1]+c+word[-1:]
-			elif(c=="ै" and len(word)>=1 and word[-1]=="ं"):
-				word = word[:-1]+c+word[-1:]
-			elif(c=='र्' and len(word)>=1 and word[-1]==' '):
-				word=word[:-1]+'ई'
-			elif(c=='इ' and len(word)>=1 and word[-1] in numbers ):
-				word=word+' '
-			else:
-				word = word+c
-			#print(word)
-	word =normalization(word)
-	word = re.sub(r'पx0', 'फ', word)
-	word = re.sub(r'([\u0915-\u0939])ोx6', r'\1ों', word)
-	output.write(word+"\n")
+
+	chars = list(k)
+
+	out_line = ''
+	for c in chars:
+		if c in map_dict:
+			out_line += map_dict[c]
+		else:
+			out_line += c
+
+	out_line = normalization(out_line)
+	#to solve ण्ाु
+
+	out_line = re.sub(u'([\u094c\u0902\u0915-\u0939])\u093f([\u0915-\u0939])',r'\1\2ि', out_line)
+	out_line = re.sub(u'([\u0902])\u093f([\u0915-\u0939])\u094d([\u0915-\u0939])',u'\u0902\\2\u094d\\3\u093f', out_line)
+
+	out_line = re.sub(u'\u094d\u093E\u0941', u'\u0941', out_line)
+	
+	out_line = re.sub(u'([ \u0905])\u093f([\u0915-\u0939])',r'\1\2ि', out_line)
+	out_line = re.sub(u'^\u093f([\u0915-\u0939])',u'\\1\u093f', out_line)
+	out_line = re.sub(u'([\u093E-\u094C])\u093F([\u0915-\u0939])', u'\\1\\2\u093F', out_line)
+	out_line = re.sub(u'\u0906\u093F([\u0915-\u0939])\u094D([\u0915-\u0939])', u'\u0906\\1\u094D\\2\u093F', out_line)
+	out_line = re.sub(u'([\u0915-\u0939])\u0930\u094D', u'\u0930\u094D\\1', out_line, flags=re.UNICODE)
+
+	out_line = re.sub(u'\u094d\u093E', u'\u093E', out_line)
+	out_line = re.sub(u'\u094d\u094B', u'\u094B', out_line)
+	out_line = re.sub(u'\u093E\u094B', u'\u094B', out_line)
+	out_line = re.sub(u'\u093E\u093E', u'\u093E', out_line)
+	out_line = re.sub(u'\u093F\u093E', u'\u093F', out_line)
+	out_line = re.sub(u'\u093E\u094C', u'\u094C', out_line)
+	out_line = re.sub(u'\u093E\u0940', u'\u0940', out_line)
+	out_line = re.sub(u'\u093E\u0942', u'\u0942', out_line)
+
+
+	out_line = re.sub(u'\u0924\u094D\u0930\u093E', u'\u0924\u094D\u0930', out_line)
+	out_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1', out_line)
+
+	out_line = re.sub(r'पx0', 'फ', out_line)
+	out_line = re.sub(r'1\/4', '\u0926\u094d', out_line)
+	out_line = re.sub(r'\u0935\u0947\u0902x0', u'\u0915\u0947\u0902', out_line)
+	out_line = re.sub(r'\u0935\u0947\u0902x0', u'\u0915\u0947\u0902', out_line)
+	out_line = re.sub(r'\u0935\u0941x0', u'\u0915\u0941', out_line)
+	out_line = re.sub(r'([\u0915-\u0939])ोx6', r'\1ों', out_line)
+	output.write(out_line+"\n")
