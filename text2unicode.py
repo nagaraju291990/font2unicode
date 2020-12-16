@@ -48,6 +48,9 @@ def regexRules(tmp_line):
 	#consonat followed by letter ra followed by virama, shift the consonat to end
 	tmp_line = re.sub(u'([\u0915-\u0939])\u0930\u094D', u'\u0930\u094D\\1', tmp_line, flags=re.UNICODE)
 
+	#consonant followed by choti i matra and virama then letter r move i maatra after cosonant halant consoant कि्रया to क्रिया
+	tmp_line = re.sub(u'([\u0915-\u0939])\u093F\u094d([\u0915-\u0939])', u'\\1\u094D\\2\u093F', tmp_line)
+
 	#below are rules to normalize two dependent vowels occuring side by side
 	tmp_line = re.sub(u'\u094d\u093E', u'\u093E', tmp_line)
 	tmp_line = re.sub(u'\u094d\u094B', u'\u094B', tmp_line)
