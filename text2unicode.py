@@ -51,6 +51,8 @@ def regexRules(tmp_line):
 	#consonant followed by choti i matra and virama then letter r move i maatra after cosonant halant consoant कि्रया to क्रिया
 	tmp_line = re.sub(u'([\u0915-\u0939])\u093F\u094d([\u0915-\u0939])', u'\\1\u094D\\2\u093F', tmp_line)
 
+	
+
 	#below are rules to normalize two dependent vowels occuring side by side
 	tmp_line = re.sub(u'\u094d\u093E', u'\u093E', tmp_line)
 	tmp_line = re.sub(u'\u094d\u094B', u'\u094B', tmp_line)
@@ -146,6 +148,10 @@ for k in lines:
 		else:
 			out_line += c
 
+	#print(out_line)
+	#to solve FkksZ => थोर् => र्थो		
+	out_line = re.sub(u'([\u0915-\u0939])\u094D\u093E\u093E\u0947\u0930\u094D', u'\u0930\u094D\\1\u094B' ,out_line)
+	
 	out_line = normalization(out_line)
 	#to solve ण्ाु
 
