@@ -74,7 +74,7 @@ def regexRules(tmp_line):
 	tmp_line = re.sub(r'\u0935\u0947\u0902x0', u'\u0915\u0947\u0902', tmp_line)
 	tmp_line = re.sub(r'\u0935\u0947\u0902x0', u'\u0915\u0947\u0902', tmp_line)
 	tmp_line = re.sub(r'\u0935\u0941x0', u'\u0915\u0941', tmp_line)
-	tmp_line = re.sub(r'([\u0915-\u0939])ोx6', r'\1ों', tmp_line)
+	tmp_line = re.sub(r'([\u0915-\u0939])ोx6', u'\u0930\u094D\\1ों', tmp_line)
 	return tmp_line		
 
 def normalization(word):                    #Word Normalization
@@ -127,7 +127,9 @@ for k in lines:
 	#lang = find_lang(k)
 
 	#to solve - input=fo"k;ksa;output=विषायों
-	k = re.sub(r'\"k', u"\u0937", k) 
+	k = re.sub(r'\"k', u"\u0937", k)
+	#to solve .k (णा) 
+	k = re.sub(r'\.k', u'\u0923',k)
 
 	k = re.sub(r'osQ', 'ds', k)
 	k = re.sub(r'oSQ', 'dS', k)
@@ -138,6 +140,7 @@ for k in lines:
 	out_line = ''
 	#get mapping values of each input character in the current line
 	for c in chars:
+		#print(c, map_dict[c])
 		if c in map_dict:
 			out_line += map_dict[c]
 		else:
