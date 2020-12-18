@@ -48,9 +48,8 @@ def regexRules(tmp_line):
 	#shifting choti i maatra when followed by long vowel A and with pattern CViramaC
 	tmp_line = re.sub(u'\u0906\u093F([\u0915-\u0939])\u094D([\u0915-\u0939])', u'\u0906\\1\u094D\\2\u093F', tmp_line)
 
-	#consonat followed by letter ra followed by virama, shift the consonat to end
-	tmp_line = re.sub(u'([\u0915-\u0939])\u0930\u094D', u'\u0930\u094D\\1', tmp_line, flags=re.UNICODE)
 
+	#print(tmp_line)
 	#consonant followed by choti i matra and virama then letter r move i maatra after cosonant halant consoant कि्रया to क्रिया
 	tmp_line = re.sub(u'([\u0915-\u0939])\u093F\u094d([\u0915-\u0939])', u'\\1\u094D\\2\u093F', tmp_line)
 
@@ -71,7 +70,10 @@ def regexRules(tmp_line):
 	tmp_line = re.sub(u'\u0924\u094D\u0930\u093E', u'\u0924\u094D\u0930', tmp_line)
 
 	# to replace consonant followed by  ा र ् with र ् consonant
-	tmp_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1\u093E', tmp_line)
+	tmp_line = re.sub(u'([\u0915-\u0939])([\u093E\u0940])\u0930\u094D', u'replaced\u0930\u094D\\1\\2replaced', tmp_line)
+
+	#consonat followed by letter ra followed by virama, shift the consonat to end
+	tmp_line = re.sub(u'([\u0915-\u0939])\u0930\u094D', u'\u0930\u094D\\1', tmp_line, flags=re.UNICODE)
 
 	#post processing rules
 	tmp_line = re.sub(r'पx0', 'फ', tmp_line)
@@ -80,6 +82,8 @@ def regexRules(tmp_line):
 	tmp_line = re.sub(r'\u0935\u0947\u0902x0', u'\u0915\u0947\u0902', tmp_line)
 	tmp_line = re.sub(r'\u0935\u0941x0', u'\u0915\u0941', tmp_line)
 	tmp_line = re.sub(r'([\u0915-\u0939])ोx6', u'\u0930\u094D\\1ों', tmp_line)
+
+	tmp_line = re.sub(r'replaced', '', tmp_line)
 	return tmp_line		
 
 def normalization(word):                    #Word Normalization
@@ -139,6 +143,8 @@ for k in lines:
 	k = re.sub(r'osQ', 'ds', k)
 	k = re.sub(r'oSQ', 'dS', k)
 
+
+
 	
 	#LokLFk => स्वास्था => स्वास्थ
 	#k = re.sub(r'Fk', u'\u0925', k)
@@ -157,6 +163,9 @@ for k in lines:
 		else:
 			out_line += c
 
+	#print(out_line)
+	#to solve ek=kkRed => मात्रत्मक =>मात्रात्मक
+	out_line = re.sub(r'([\u0915-\u0939])\u094D\u0930\u094D\u093E' , u'\\1\u094D\u0930\u093E', out_line)
 
 	#after immediate mapping replacement, apply consonant virama aa matra rule to make it full character
 	out_line = re.sub(r'([\u0915-\u0939])\u094D\u093E' , u'\\1', out_line)
@@ -166,7 +175,7 @@ for k in lines:
 	
 	out_line = normalization(out_line)
 	#to solve ण्ाु
-
+	#print(out_line)
 	out_line = regexRules(out_line)
 
 
