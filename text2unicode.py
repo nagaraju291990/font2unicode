@@ -39,6 +39,9 @@ def regexRules(tmp_line):
 	#shifting choti i maatra when it is directly in the begging of consonant
 	tmp_line = re.sub(u'^\u093f([\u0915-\u0939])',u'\\1\u093f', tmp_line)
 
+	#shifitng choto i maatra to a consonant when it is followed by a vowel mfpr => उिचत => उचित
+	tmp_line = re.sub(u'([\u0905-\u0914])\u093f([\u0915-\u0939])',u'\\1\\2\u093F', tmp_line)
+
 	#shifting choti i maatra between two consonants
 	tmp_line = re.sub(u'([\u093E-\u094C])\u093F([\u0915-\u0939])', u'\\1\\2\u093F', tmp_line)
 
@@ -136,6 +139,9 @@ for k in lines:
 	k = re.sub(r'osQ', 'ds', k)
 	k = re.sub(r'oSQ', 'dS', k)
 
+	#LokLFk => स्वास्था => स्वास्थ
+	k = re.sub(r'Fk', u'\u0925', k)
+
 	#convert current line into a list of characters
 	chars = list(k)
 
@@ -150,7 +156,7 @@ for k in lines:
 
 	#print(out_line)
 	#to solve FkksZ => थोर् => र्थो		
-	out_line = re.sub(u'([\u0915-\u0939])\u094D\u093E\u093E\u0947\u0930\u094D', u'\u0930\u094D\\1\u094B' ,out_line)
+	out_line = re.sub(u'([\u0915-\u0939])\u093E\u0947\u0930\u094D', u'\u0930\u094D\\1\u094B' ,out_line)
 	
 	out_line = normalization(out_line)
 	#to solve ण्ाु
