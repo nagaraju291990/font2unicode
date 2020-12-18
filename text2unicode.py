@@ -71,7 +71,7 @@ def regexRules(tmp_line):
 	tmp_line = re.sub(u'\u0924\u094D\u0930\u093E', u'\u0924\u094D\u0930', tmp_line)
 
 	# to replace consonant followed by  ा र ् with र ् consonant
-	tmp_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1\u093E', tmp_line)
+	#tmp_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1\u093E', tmp_line)
 
 	#post processing rules
 	tmp_line = re.sub(r'पx0', 'फ', tmp_line)
@@ -139,6 +139,7 @@ for k in lines:
 	k = re.sub(r'osQ', 'ds', k)
 	k = re.sub(r'oSQ', 'dS', k)
 
+	
 	#LokLFk => स्वास्था => स्वास्थ
 	#k = re.sub(r'Fk', u'\u0925', k)
 
@@ -156,6 +157,9 @@ for k in lines:
 		else:
 			out_line += c
 
+
+	#after immediate mapping replacement, apply consonant virama aa matra rule to make it full character
+	out_line = re.sub(r'([\u0915-\u0939])\u094D\u093E' , u'\\1', out_line)
 	#print(out_line)
 	#to solve FkksZ => थोर् => र्थो		
 	out_line = re.sub(u'([\u0915-\u0939])\u093E\u0947\u0930\u094D', u'\u0930\u094D\\1\u094B' ,out_line)
