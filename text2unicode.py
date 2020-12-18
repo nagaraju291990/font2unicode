@@ -71,7 +71,7 @@ def regexRules(tmp_line):
 	tmp_line = re.sub(u'\u0924\u094D\u0930\u093E', u'\u0924\u094D\u0930', tmp_line)
 
 	# to replace consonant followed by  ा र ् with र ् consonant
-	tmp_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1', tmp_line)
+	tmp_line = re.sub(u'([\u0915-\u0939])\u093E\u0930\u094D', u'\u0930\u094D\\1\u093E', tmp_line)
 
 	#post processing rules
 	tmp_line = re.sub(r'पx0', 'फ', tmp_line)
@@ -140,7 +140,9 @@ for k in lines:
 	k = re.sub(r'oSQ', 'dS', k)
 
 	#LokLFk => स्वास्था => स्वास्थ
-	k = re.sub(r'Fk', u'\u0925', k)
+	#k = re.sub(r'Fk', u'\u0925', k)
+
+
 
 	#convert current line into a list of characters
 	chars = list(k)
